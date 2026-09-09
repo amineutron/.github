@@ -1,0 +1,16 @@
+# Workflow réutilisable : build du wheel et publication PyPI par Trusted Publishing (à activer côté PyPI).
+name: release-pypi
+on:
+  workflow_call:
+jobs:
+  build-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1

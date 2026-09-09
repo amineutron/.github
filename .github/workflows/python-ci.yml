@@ -1,0 +1,54 @@
+# Workflow réutilisable : tests Python avec uv, lint ruff, garde-fou anti chemins personnels.
+# Appel depuis un dépôt :  uses: amineutron/.github/.github/workflows/python-ci.yml@main
+name: python-ci
+on:
+  workflow_call:
+    inputs:
+      python-versions:
+        type: string
+        default: '["3.11", "3.12"]'
+      test-command:
+        type: string
+        default: "uv run --frozen python -m pytest -q"
+      lint:
+        type: boolean
+        default: true
+      extra:
+        type: string
+        default: ""
+        description: "extra pip/uv à installer (ex: --extra dev)"
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ${{ fromJSON(inputs.python-versions) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Python ${{ matrix.python }}
+        run: uv python install ${{ matrix.python }}
+      - name: Dépendances
+        run: |
+          if [ -f uv.lock ]; then uv sync --frozen --all-extras --python ${{ matrix.python }}; else uv sync --all-extras --python ${{ matrix.python }}; fi
+      - name: Tests
+        run: ${{ inputs.test-command }}
+  lint:
+    if: ${{ inputs.lint }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+  no-personal-paths:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aucun chemin personnel ni adresse de réseau local
+        run: |
+          set -e
+          hits=$(grep -rIlE '/home/[a-z]+/|192\.168\.[0-9]+\.[0-9]+' --exclude-dir=.git --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.venv . || true)
+          if [ -n "$hits" ]; then echo "Chemins ou adresses personnels trouvés :"; echo "$hits"; exit 1; fi
+          echo "ok"
