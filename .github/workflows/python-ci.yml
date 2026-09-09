@@ -49,6 +49,17 @@ jobs:
       - name: Aucun chemin personnel ni adresse de réseau local
         run: |
           set -e
-          hits=$(grep -rIlE '/home/[a-z]+/|192\.168\.[0-9]+\.[0-9]+' --exclude-dir=.git --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.venv . || true)
+          # Chemins personnels (/home/<toi>/) et adresses de réseau local, sauf les exemples génériques
+          # (/home/user, /home/runner) et le réseau NAT par défaut de libvirt (192.168.122.0/24).
+          pattern='/home/(?!user/|runner/)[a-z]+/|192\.168\.(?!122\.)[0-9]+\.[0-9]+'
+          excl=(--exclude-dir=.git --exclude-dir=docs --exclude-dir=node_modules --exclude-dir=.venv --exclude-dir=dist --exclude-dir=android)
+          # Exclusions propres au dépôt : un nom de dossier ou un motif de fichier par ligne dans .github/personal-paths-exclude
+          if [ -f .github/personal-paths-exclude ]; then
+            while IFS= read -r l; do
+              case "$l" in ''|'#'*) continue ;; esac
+              excl+=("--exclude-dir=$l" "--exclude=$l")
+            done < .github/personal-paths-exclude
+          fi
+          hits=$(grep -rIlP "$pattern" "${excl[@]}" . || true)
           if [ -n "$hits" ]; then echo "Chemins ou adresses personnels trouvés :"; echo "$hits"; exit 1; fi
           echo "ok"
