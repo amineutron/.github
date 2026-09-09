@@ -1,0 +1,19 @@
+name: Proposition de fonctionnalité (feature request)
+description: Une idée d'amélioration
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Le problème à résoudre (problem)
+      description: Qu'est-ce qui est pénible ou impossible aujourd'hui ?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: La solution imaginée (proposal)
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagées (alternatives)

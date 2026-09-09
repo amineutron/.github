@@ -1,0 +1,34 @@
+name: Rapport de bug (bug report)
+description: Quelque chose ne fonctionne pas comme prévu
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Ce qui se passe (what happens)
+      description: Décrivez le comportement observé et le comportement attendu.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Étapes pour reproduire (steps to reproduce)
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version ou commit (version)
+      placeholder: "v1.1.0, ou le hash du commit"
+  - type: input
+    id: env
+    attributes:
+      label: Environnement (environment)
+      placeholder: "Fedora 42, Python 3.12, Ollama 0.9, GPU ou CPU"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Journaux (logs)
+      description: Collez les lignes utiles. Retirez les adresses IP, chemins personnels et secrets.
+      render: shell
