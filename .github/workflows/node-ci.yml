@@ -13,7 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node-version }}
@@ -27,7 +27,7 @@ jobs:
   no-personal-paths:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: |
           set -e
           # Chemins personnels (/home/<toi>/) et adresses de réseau local, sauf les exemples génériques
