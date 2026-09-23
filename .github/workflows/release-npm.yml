@@ -1,0 +1,35 @@
+# Workflow réutilisable : à chaque tag v*, build, publication npm par Trusted
+# Publishing (provenance OIDC, à déclarer côté npm), release GitHub avec le tarball.
+name: release-npm
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        type: string
+        default: "20"
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test --if-present
+      - run: npm pack
+      - run: npm publish --provenance --access public
+      - name: Release GitHub avec le tarball
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1 \
+            || gh release create "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" --generate-notes
+          gh release upload "${GITHUB_REF_NAME}" *.tgz --repo "${GITHUB_REPOSITORY}" --clobber
