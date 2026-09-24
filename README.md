@@ -19,3 +19,7 @@ jobs:
   ci:
     uses: amineutron/.github/.github/workflows/python-ci.yml@main
 ```
+
+## Checklist de parité d'emballage
+
+[CHECKLIST.md](CHECKLIST.md) : ce qu'un dépôt doit avoir avant d'être soumis à un annuaire ou annoncé (fiche GitHub, README, paquet, release, communauté).

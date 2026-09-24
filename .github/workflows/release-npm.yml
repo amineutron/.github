@@ -1,3 +1,7 @@
+# OBSOLÈTE (2026-09-24) : npm refuse les jetons OIDC émis depuis un workflow
+# réutilisable (claim job_workflow_ref sur ce dépôt, erreur invalid-publisher).
+# Chaque dépôt porte désormais son propre release.yml autonome. Conservé pour
+# référence, ne plus l'appeler.
 # Workflow réutilisable : à chaque tag v*, build, publication npm par Trusted
 # Publishing (provenance OIDC, à déclarer côté npm), release GitHub avec le tarball.
 name: release-npm

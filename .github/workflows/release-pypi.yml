@@ -1,3 +1,7 @@
+# OBSOLÈTE (2026-09-24) : PyPI refuse les jetons OIDC émis depuis un workflow
+# réutilisable (claim job_workflow_ref sur ce dépôt, erreur invalid-publisher).
+# Chaque dépôt porte désormais son propre release.yml autonome. Conservé pour
+# référence, ne plus l'appeler.
 # Workflow réutilisable : à chaque tag v*, build du wheel, publication PyPI par
 # Trusted Publishing (environnement "pypi" à déclarer côté PyPI et côté dépôt),
 # puis release GitHub avec le wheel et le sdist attachés.
