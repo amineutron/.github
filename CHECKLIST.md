@@ -19,7 +19,11 @@
 
 ## Paquet et release
 - [ ] Paquet publié sur PyPI ou npm par Trusted Publishing, depuis un `release.yml` autonome (les registres refusent les workflows réutilisables).
+- [ ] Code dans un paquet à son nom (`<nom>_mcp/`), jamais de module de premier niveau générique (`server`, `utils`...) : deux serveurs installés dans le même environnement s'écraseraient (constaté sur catt/denon/pylips avant la 0.3.0). Un `server.py` minimal à la racine peut rester pour lancer depuis un clone, hors du wheel.
+- [ ] `<commande> --help` et `--version` répondent sans configuration ni appareil, et sans démarrer le serveur ni ouvrir de journal (vérifié depuis un dossier vide avec `uvx` / `npx`).
+- [ ] Installer ensemble les serveurs publiés dans un seul environnement et vérifier que chaque commande répond.
 - [ ] `server.json` valide (`mcp-publisher validate`) et version identique à celle du paquet publié.
+- [ ] Job `registry` dans `release.yml` : `mcp-publisher` (version et sha256 figés), `login github-oidc`, `publish`. Plus de connexion manuelle ; `workflow_dispatch` relance le registre seul.
 - [ ] CHANGELOG.md à jour ; notes de release générées par git-cliff (`cliff.toml`).
 - [ ] Release GitHub avec le wheel/sdist ou le tarball et les attestations.
 - [ ] Tag signé pour lyra et fedora-agents.
@@ -27,7 +31,7 @@
 ## Communauté
 - [ ] CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md (hérités de ce dépôt `.github` si absents).
 - [ ] Modèles d'issue et de PR (hérités).
-- [ ] Aucun chemin personnel, adresse privée ni secret (garde-fou CI `personal-path`).
+- [ ] Aucun chemin personnel, adresse privée ni secret : garde-fou CI `no-personal-paths` et, en local, hooks git globaux `~/dotfiles/git/hooks` (commit et push). Exemples génériques admis : `/home/user`, `192.168.122.x`, plages de documentation (`192.0.2.x`).
 
 ## Soumission
 - [ ] Entrée awesome-mcp-servers : `- [amineutron/<dépôt>](url) [badge Glama] 🐍 ou 📇, 🏠, 🐧 - description courte. \`uvx <paquet>\``.
