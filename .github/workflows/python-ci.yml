@@ -31,6 +31,11 @@ jobs:
           enable-cache: true
       - name: Python ${{ matrix.python }}
         run: uv python install ${{ matrix.python }}
+      - name: uv.lock à jour avec pyproject.toml
+        if: ${{ hashFiles('uv.lock') != '' }}
+        # --frozen installe le lock sans le comparer à pyproject.toml : une dépendance ajoutée
+        # sans relancer `uv lock` passerait inaperçue et la version livrée différerait du lock.
+        run: uv lock --check
       - name: Dépendances
         run: |
           if [ -f uv.lock ]; then uv sync --frozen --all-extras --python ${{ matrix.python }}; else uv sync --all-extras --python ${{ matrix.python }}; fi
